@@ -63,20 +63,8 @@ exports.SideNav = function (props) {
         }
     };
     React.useEffect(function () {
-        setState(__assign(__assign({}, state), { mode: props.mode || types_1.ViewMode.normal }));
-    }, [props.mode]);
-    React.useEffect(function () {
-        setState(__assign(__assign({}, state), { selectedPath: props.defaultSelectedPath || '' }));
-    }, [props.defaultSelectedPath]);
-    React.useEffect(function () {
-        setState(__assign(__assign({}, state), { childrenToggleIndicator: props.childrenToggleIndicator }));
-    }, [props.childrenToggleIndicator]);
-    React.useEffect(function () {
-        setState(__assign(__assign({}, state), { childrenToggleMode: props.childrenToggleMode || types_1.ChildrenToggleMode.hover }));
-    }, [props.childrenToggleMode]);
-    React.useEffect(function () {
-        setState(__assign(__assign({}, state), { collapseAutomatically: props.collapseAutomatically }));
-    }, [props.collapseAutomatically]);
+        setState(function (currentState) { return (__assign(__assign({}, currentState), { mode: props.mode || types_1.ViewMode.normal, selectedPath: props.defaultSelectedPath || '', childrenToggleIndicator: props.childrenToggleIndicator, childrenToggleMode: props.childrenToggleMode || types_1.ChildrenToggleMode.hover, collapseAutomatically: props.collapseAutomatically })); });
+    }, [props.mode, props.defaultSelectedPath, props.childrenToggleIndicator, props.childrenToggleMode, props.collapseAutomatically]);
     return (React.createElement(exports.SideNavContext.Provider, { value: state },
         React.createElement(exports.SideNavActionContext.Provider, { value: { onSelectionPathSelected: onSelectionPathSelected } },
             React.createElement("aside", { onClickCapture: onMouseClick, onMouseOver: onMouseOver, "data-selected-path": state.selectedPath, "data-testid": 'sidenav-root' }, props.children))));
