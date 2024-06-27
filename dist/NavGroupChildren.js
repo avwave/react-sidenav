@@ -38,7 +38,6 @@ exports.NavGroupChildren = function (props) {
                 var boundingRect = current.getBoundingClientRect();
                 return (React.createElement(CompactNavGroupChildrenCont, null,
                     React.createElement("div", { style: {
-                            marginLeft: 2,
                             background: current ? current.style.background : '#FFF',
                             position: 'absolute',
                             zIndex: 99999,

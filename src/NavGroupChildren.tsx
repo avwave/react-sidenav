@@ -43,7 +43,6 @@ export const NavGroupChildren: React.FC<INavGroupChildrenProp> = (props) => {
             <CompactNavGroupChildrenCont>
               <div
                 style={{
-                  marginLeft: 2,
                   background: current ? current.style.background: '#FFF',
                   position: 'absolute',
                   zIndex: 99999,
