@@ -71,4 +71,10 @@ export interface ISideNavContext {
    * 
    */
   mouseOverPathId?: string;
+  mouseClickPathId?: string;
+  /**
+   *
+   * If true, then when a nav is clicked, it will collapse other openedbranches automatically
+   */
+  collapseAutomatically?: boolean
 }

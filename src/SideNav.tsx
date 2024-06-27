@@ -17,14 +17,17 @@ interface ISideNavProp {
   defaultSelectedPath?: string
   childrenToggleMode?: ChildrenToggleMode
   childrenToggleIndicator?: React.ComponentType
+  collapseAutomatically?: boolean
 }
+
 export const SideNav: React.FC<ISideNavProp> = (props) => {
 
   const [state, setState] = React.useState<ISideNavContext>({
     selectedPath: props.defaultSelectedPath || '',
     mode: props.mode || ViewMode.normal,
     childrenToggleMode: props.childrenToggleMode || ChildrenToggleMode.hover,
-    childrenToggleIndicator: props.childrenToggleIndicator
+    childrenToggleIndicator: props.childrenToggleIndicator,
+    collapseAutomatically: props.collapseAutomatically
   })
 
   const onSelectionPathSelected = (path: string, selectionData: ISelectionPathData) => {
@@ -51,6 +54,23 @@ export const SideNav: React.FC<ISideNavProp> = (props) => {
       setState({ ...state, mouseOverPathId })
     }
   }
+
+  const onMouseClick = (e: any) => {
+    let mouseClickPathId;
+    let current = e.target;
+    while ( current && current.getAttribute ) {
+      const pathId = current.getAttribute('data-pathid')
+      if ( pathId ) {
+        mouseClickPathId = pathId
+        break;
+      }
+      current = current.parentNode
+    }
+    if ( mouseClickPathId && state.mouseClickPathId !== mouseClickPathId ) {
+      setState({ ...state, mouseClickPathId })
+    }
+  }
+
   React.useEffect(() => {
     setState({ ...state, mode: props.mode || ViewMode.normal })
   }, [ props.mode ] )
@@ -65,6 +85,7 @@ export const SideNav: React.FC<ISideNavProp> = (props) => {
     <SideNavContext.Provider value={state}>
       <SideNavActionContext.Provider value={{ onSelectionPathSelected }}>
         <aside
+          onClickCapture={onMouseClick}
           onMouseOver={onMouseOver}
           data-selected-path={state.selectedPath}
           data-testid='sidenav-root'

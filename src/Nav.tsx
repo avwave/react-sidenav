@@ -100,7 +100,7 @@ export const Nav: React.FC<INavProps> = (props) => {
     'data-pathid': `${pathId}`,
     'data-testid': `${pathId}`,
     children: props.children,
-    onClick
+    onClick,
   } as any
 
   if ( isLeaf ) {
