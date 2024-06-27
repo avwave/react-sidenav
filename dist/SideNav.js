@@ -71,6 +71,12 @@ exports.SideNav = function (props) {
     React.useEffect(function () {
         setState(__assign(__assign({}, state), { childrenToggleIndicator: props.childrenToggleIndicator }));
     }, [props.childrenToggleIndicator]);
+    React.useEffect(function () {
+        setState(__assign(__assign({}, state), { childrenToggleMode: props.childrenToggleMode || types_1.ChildrenToggleMode.hover }));
+    }, [props.childrenToggleMode]);
+    React.useEffect(function () {
+        setState(__assign(__assign({}, state), { collapseAutomatically: props.collapseAutomatically }));
+    }, [props.collapseAutomatically]);
     return (React.createElement(exports.SideNavContext.Provider, { value: state },
         React.createElement(exports.SideNavActionContext.Provider, { value: { onSelectionPathSelected: onSelectionPathSelected } },
             React.createElement("aside", { onClickCapture: onMouseClick, onMouseOver: onMouseOver, "data-selected-path": state.selectedPath, "data-testid": 'sidenav-root' }, props.children))));
