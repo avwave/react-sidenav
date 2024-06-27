@@ -147,23 +147,23 @@ render(
         <Nav id='page1'>
           <Item>Page1</Item>
         </Nav>
+              <Nav id='page1'>
+          <Item>Page 1</Item>
+        </Nav>
         <Nav id='page2'>
-          <Item>Page2</Item>
+          <Item>Page 2</Item>
           <Nav id='page1'>
-            <Item>Page2.1</Item>
-          </Nav>
-          <Nav id='page2'>
-            <Item>Page2.2</Item>
-            <Nav id='page1'>
-              <Item>Page2.2.1</Item>
-            </Nav>
-            <Nav id='page2.2'>
-              <Item>Page2.2.2</Item>
-            </Nav>
+            <Item>Page 2.1</Item>
           </Nav>
         </Nav>
         <Nav id='page3'>
-          <Item>Page3</Item>
+          <Item>Page 3</Item>
+          <Nav id='page1'>
+            <Item>Page 3.1</Item>
+          </Nav>
+        </Nav>
+        <Nav id='page4'>
+          <Item>Page 4</Item>
         </Nav>
       </SideNav>
     </Container>

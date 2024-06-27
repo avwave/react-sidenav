@@ -80,6 +80,12 @@ export const SideNav: React.FC<ISideNavProp> = (props) => {
   React.useEffect(() => {
     setState({ ...state, childrenToggleIndicator: props.childrenToggleIndicator })
   }, [ props.childrenToggleIndicator ] )
+  React.useEffect(() => {
+    setState({ ...state, childrenToggleMode: props.childrenToggleMode || ChildrenToggleMode.hover })
+  }, [ props.childrenToggleMode ] )
+  React.useEffect(() => {
+    setState({ ...state, collapseAutomatically: props.collapseAutomatically })
+  }, [ props.collapseAutomatically ] )
 
   return (
     <SideNavContext.Provider value={state}>
