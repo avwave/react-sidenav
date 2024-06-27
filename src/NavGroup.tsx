@@ -54,6 +54,16 @@ export const NavGroup: React.FC<INavGroupProp> = (props) => {
   const isHoverToggleMode = context.childrenToggleMode === ChildrenToggleMode.hover
   const ToggleIndicatorComp = context.childrenToggleIndicator || ToggleIndicator
   React.useEffect(() => {
+    if (context.collapseAutomatically) {
+      if (context.childrenToggleMode === ChildrenToggleMode.hover) {
+        // @ts-ignore
+        setState((context.mouseOverPathId && (context.mouseOverPathId.includes(navContext.pathId) || navContext.pathId.includes(context.mouseOverPathId))) || context.selectedPath.includes(navContext.pathId) ? NavGroupState.expanded : NavGroupState.collapsed)
+      } else {
+        // @ts-ignore
+        const st = (context.mouseClickPathId && (context.mouseClickPathId.includes(navContext.pathId) || navContext.pathId.includes(context.mouseClickPathId))) || context.selectedPath.includes(navContext.pathId) ? NavGroupState.expanded : NavGroupState.collapsed
+        setState(st)
+      }
+    }
     if ( navContext.pathId &&
         context.mouseOverPathId && ( isHoverToggleMode || isCompact )
     ) {
@@ -64,7 +74,7 @@ export const NavGroup: React.FC<INavGroupProp> = (props) => {
           setState( () => NavGroupState.collapsed);
         }
     }
-  }, [ context.mouseOverPathId, navContext.pathId, ChildrenToggleMode.hover ])
+  }, [ context.mouseClickPathId, context.mouseOverPathId, navContext.pathId, ChildrenToggleMode.hover ])
 
   const toggleState = () => {
     setState( currentState => {

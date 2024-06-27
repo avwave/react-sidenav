@@ -77,7 +77,9 @@ render(
     <Container width={140}>
       <SideNav 
         childrenToggleMode={ChildrenToggleMode.click}
-        defaultSelectedPath={'page1'}>
+        defaultSelectedPath={'page1'}
+        collapseAutomatically={true}
+      >
         <Nav id='page1'>
           <Item>Page 1</Item>
         </Nav>
@@ -85,6 +87,38 @@ render(
           <Item>Page 2</Item>
           <Nav id='page1'>
             <Item>Page 2.1</Item>
+          </Nav>
+        </Nav>
+        <Nav id='page3'>
+          <Item>Page 3</Item>
+          <Nav id='page1'>
+            <Item>Page 3.1</Item>
+          </Nav>
+        </Nav>
+        <Nav id='page4'>
+          <Item>Page 4</Item>
+        </Nav>
+      </SideNav>
+    </Container>
+    <Container width={140}>
+      <SideNav
+        childrenToggleMode={ChildrenToggleMode.hover}
+        defaultSelectedPath={'page1'}
+        collapseAutomatically={true}
+      >
+        <Nav id='page1'>
+          <Item>Page 1</Item>
+        </Nav>
+        <Nav id='page2'>
+          <Item>Page 2</Item>
+          <Nav id='page1'>
+            <Item>Page 2.1</Item>
+          </Nav>
+        </Nav>
+        <Nav id='page3'>
+          <Item>Page 3</Item>
+          <Nav id='page1'>
+            <Item>Page 3.1</Item>
           </Nav>
         </Nav>
         <Nav id='page4'>
