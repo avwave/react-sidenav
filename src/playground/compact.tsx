@@ -16,16 +16,19 @@ import {
 } from './icons';
 
 import styled from 'styled-components'
+import { ChildrenToggleMode } from '../types';
+import { children } from 'cheerio/lib/api/traversing';
+import { ISideNavRef } from '../SideNav';
 
 interface IItemContainerProp {
   selected: boolean
 }
 const ItemContainer = styled.div<IItemContainerProp>`
-  color: ${ props => props.selected ? 'pink' : 'inherit '};
+  color: ${props => props.selected ? 'pink' : 'inherit '};
   padding: 8px;
   &:hover {
     background-color: pink;
-    color: ${ props => props.selected ? '#FFF' : 'inherit '};
+    color: ${props => props.selected ? '#FFF' : 'inherit '};
   }
 `
 const Item: React.FC = (props) => {
@@ -34,23 +37,32 @@ const Item: React.FC = (props) => {
 
   return (
     <ItemContainer selected={context.selected}>
-      { props.children }
+      {props.children}
     </ItemContainer>
   )
 }
 
 const Flex: React.FC = (props) => {
   return (
-    <div style={{display: 'flex'}}>
-      { props.children }
+    <div style={{ display: 'flex' }}>
+      {props.children}
     </div>
   )
 }
 
-const Container: React.FC<{width?: number}> = (props) => {
+const Container: React.FC<{ width?: number }> = (props) => {
   return (
-    <div style={{margin: 4, width: props.width || 'auto', height: 200, border: '1px solid #E5E5E5'}}>
-      { props.children }
+    <div
+      style={{
+        margin: 4,
+        width: props.width || 'auto',
+        height: '99vh',
+        border: '1px solid #E5E5E5',
+        
+        overflowY: 'scroll',
+        overflowX: 'hidden'
+      }}>
+      {props.children}
     </div>
   )
 }
@@ -62,43 +74,100 @@ const IconContainer = styled.div`
   }
 `
 
-const Icon: React.FC<{icon: React.FC<IIconProp>}> = (props) => {
+const Icon: React.FC<{ icon: React.FC<IIconProp> }> = (props) => {
   const IconComponent = props.icon
   return (
     <IconContainer>
-      <IconComponent size={30}/>
+      <IconComponent size={30} />
     </IconContainer>
   )
 }
 
+const structure = [
+  {
+    id: 'page1',
+    name: 'Page 1',
+    children: [
+      {
+        id: 'page1-1',
+        name: 'Page 1-1',
+      },
+      {
+        id: 'page1-2',
+        name: 'Page 1-2'
+      }
+    ]
+  },
+  ...Array.from({ length: 28 }).map((_, i) => ({
+    id: 'page+' + i,
+    name: 'Page+ ' + i,
+    
+  })),
+  {
+    id: 'apeE',
+    name: 'Page E',
+    children: [
+      {
+        id: 'pageE-1',
+        name: 'Page E-1'
+      },
+      {
+        id: 'pageE-2',
+        name: 'Page E-2'
+      },
+      {
+        id: 'pageE-3',
+        name: 'Page E-3'
+      },
+      {
+        id: 'pageE-4',
+        name: 'Page E-4'
+      },
+      
+    ]
+  }
+]
+
+
+const App: React.FC = () => {
+  const [collapsed, setCollapsed] = React.useState(false);
+
+  const navRef = React.useRef<ISideNavRef>(null)
+
+  React.useEffect(
+    () => {
+      if (navRef.current) {
+        navRef.current.collapseAllNodes()
+      }
+    }, [collapsed]
+  );
+
+  return (
+    <Flex>
+      <Container width={collapsed?100:300}>
+        <SideNav
+          mode={collapsed?ViewMode.compact:ViewMode.normal}
+          childrenToggleMode={collapsed?ChildrenToggleMode.hover:ChildrenToggleMode.click}
+          collapseAutomatically
+        >
+          {structure.map((item) => (
+            <Nav key={item.id} id={item.id}>
+              <Item>{item.name}</Item>
+              {item.children && item.children.map((child) => (
+                <Nav key={child.id} id={child.id}>
+                  <Item>{child.name}</Item>
+                </Nav>
+              ))}
+            </Nav>
+          ))}
+        </SideNav>
+      </Container>
+      <button onClick={() => setCollapsed(!collapsed)}> toggle</button>
+    </Flex>
+  );
+}
+
 render(
-  <Flex>
- 
-    <Container>
-      <SideNav mode={ViewMode.compact}>
-        <Nav id='icon1'>
-          <Icon icon={Icon1}/>
-        </Nav>
-        <Nav id='icon2'>
-          <Icon icon={Icon2}/>
-          <Nav id='icon2'>
-            <span> Sub Nav 1 </span>
-          </Nav>
-          <Nav id='icon3'>
-            <span> Sub Nav 2 </span >
-          </Nav>
-          <Nav id='icon4'>
-            <span> Sub Nav 3 </span>
-          </Nav>
-        </Nav>
-        <Nav id='icon3'>
-          <Icon icon={Icon3}/>
-        </Nav>
-        <Nav id='icon4'>
-          <Icon icon={Icon2}/>
-        </Nav>
-      </SideNav>
-    </Container>
-  </Flex>,
+  <App />,
   document.getElementById('app')
 )
