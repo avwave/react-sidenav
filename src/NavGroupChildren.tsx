@@ -39,6 +39,19 @@ export const NavGroupChildren: React.FC<INavGroupChildrenProp> = (props) => {
 
       if ( current ) {
         const boundingRect = current.getBoundingClientRect();
+        const screenHeight = window.innerHeight;
+        let subStyle = {
+        }
+
+        if ( boundingRect.bottom > screenHeight ) {
+          subStyle = {
+            bottom: screenHeight - boundingRect.bottom + boundingRect.height,
+          }
+        } else {
+          subStyle = {
+            top: boundingRect.top,
+          }
+        }
         return (
             <CompactNavGroupChildrenCont>
               <div
@@ -47,7 +60,8 @@ export const NavGroupChildren: React.FC<INavGroupChildrenProp> = (props) => {
                   position: 'absolute',
                   zIndex: 99999,
                   left: boundingRect.right,
-                  top: boundingRect.top } as any}>
+                  ...subStyle
+                  } as any}>
                 { props.children }
               </div>
           </CompactNavGroupChildrenCont>
