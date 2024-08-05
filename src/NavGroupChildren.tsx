@@ -43,9 +43,9 @@ export const NavGroupChildren: React.FC<INavGroupChildrenProp> = (props) => {
         let subStyle = {
         }
 
-        if ( boundingRect.bottom > screenHeight ) {
+        if ( boundingRect.bottom+boundingRect.height > screenHeight ) {
           subStyle = {
-            bottom: screenHeight - boundingRect.bottom + boundingRect.height,
+            bottom: (screenHeight - boundingRect.bottom) ,
           }
         } else {
           subStyle = {
