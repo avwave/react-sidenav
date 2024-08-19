@@ -1,15 +1,4 @@
 "use strict";
-var __assign = (this && this.__assign) || function () {
-    __assign = Object.assign || function(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-            s = arguments[i];
-            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-                t[p] = s[p];
-        }
-        return t;
-    };
-    return __assign.apply(this, arguments);
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.NavGroupChildren = void 0;
 var React = require("react");
@@ -47,20 +36,7 @@ exports.NavGroupChildren = function (props) {
             var current = props.rootRef.current;
             if (current) {
                 var boundingRect = current.getBoundingClientRect();
-                var screenHeight = window.innerHeight;
-                var subStyle = {};
-                if (boundingRect.bottom + boundingRect.height > screenHeight) {
-                    subStyle = {
-                        bottom: (screenHeight - boundingRect.bottom),
-                    };
-                }
-                else {
-                    subStyle = {
-                        top: boundingRect.top,
-                    };
-                }
-                return (React.createElement(CompactNavGroupChildrenCont, null,
-                    React.createElement("div", { style: __assign({ background: current ? current.style.background : '#FFF', position: 'absolute', zIndex: 99999, left: boundingRect.right }, subStyle) }, props.children)));
+                return (React.createElement(CompactNavGroupChildrenCont, { boundingRect: boundingRect }, props.children));
             }
             return null;
         }
@@ -71,11 +47,31 @@ exports.NavGroupChildren = function (props) {
     }
     return null;
 };
-var mountPoint = document.createElement('div');
-document.body.appendChild(mountPoint);
-/**
- * Render on body
- */
-var CompactNavGroupChildrenCont = function (props) {
-    return react_dom_1.createPortal(props.children, mountPoint);
+var CompactNavGroupChildrenCont = function (_a) {
+    var children = _a.children, boundingRect = _a.boundingRect;
+    var _b = React.useState(null), portalElement = _b[0], setPortalElement = _b[1];
+    React.useEffect(function () {
+        var portal = document.createElement('div');
+        document.body.appendChild(portal);
+        setPortalElement(portal);
+        return function () {
+            document.body.removeChild(portal);
+        };
+    }, []);
+    React.useEffect(function () {
+        if (portalElement) {
+            var hoverBoxX = boundingRect.x, hoverBoxY = boundingRect.y, hoverBoxWidth = boundingRect.width;
+            var portalHeight = portalElement.getBoundingClientRect().height;
+            var innerHeight_1 = window.innerHeight;
+            var newX = hoverBoxX + hoverBoxWidth;
+            var newY = hoverBoxY;
+            if (hoverBoxY + portalHeight > innerHeight_1) {
+                newY = innerHeight_1 - portalHeight;
+            }
+            portalElement.style.left = newX + "px";
+            portalElement.style.top = newY + "px";
+            portalElement.style.position = 'fixed';
+        }
+    }, [portalElement, boundingRect]);
+    return portalElement ? react_dom_1.createPortal(children, portalElement) : null;
 };
