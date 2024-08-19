@@ -3,6 +3,7 @@ import { SideNavContext } from './SideNav'
 import { INavGroupChildrenProp, ViewMode, NavGroupState } from './types'
 import { createPortal } from 'react-dom'
 
+
 const StyleCollapsed = Object.freeze({
   maxHeight: 0,
   transition: 'max-height 0.3s ease-out',
@@ -20,50 +21,28 @@ export const NavGroupChildren: React.FC<INavGroupChildrenProp> = (props) => {
   React.useEffect(() => {
     let eventListener: any;
 
-    if ( context.mode === ViewMode.compact ) {
+    if (context.mode === ViewMode.compact) {
       eventListener = () => {
         props.toggleCollapsed()
       }
       window.addEventListener('click', eventListener)
     }
     return () => {
-      if ( eventListener ) {
+      if (eventListener) {
         window.removeEventListener('click', eventListener)
       }
     }
-  }, [props.toggleCollapsed, context.mode ])
+  }, [props.toggleCollapsed, context.mode])
 
-  if ( context.mode === ViewMode.compact ) {
-    if ( props.state === NavGroupState.expanded ) {
+  if (context.mode === ViewMode.compact) {
+    if (props.state === NavGroupState.expanded) {
       const { current } = props.rootRef
 
-      if ( current ) {
+      if (current) {
         const boundingRect = current.getBoundingClientRect();
-        const screenHeight = window.innerHeight;
-        let subStyle = {
-        }
-
-        if ( boundingRect.bottom+boundingRect.height > screenHeight ) {
-          subStyle = {
-            bottom: (screenHeight - boundingRect.bottom) ,
-          }
-        } else {
-          subStyle = {
-            top: boundingRect.top,
-          }
-        }
         return (
-            <CompactNavGroupChildrenCont>
-              <div
-                style={{
-                  background: current ? current.style.background: '#FFF',
-                  position: 'absolute',
-                  zIndex: 99999,
-                  left: boundingRect.right,
-                  ...subStyle
-                  } as any}>
-                { props.children }
-              </div>
+          <CompactNavGroupChildrenCont boundingRect={boundingRect}>
+            {props.children}
           </CompactNavGroupChildrenCont>
         )
       }
@@ -76,7 +55,7 @@ export const NavGroupChildren: React.FC<INavGroupChildrenProp> = (props) => {
       <div
         data-navgroupstate={props.state}
         style={style}>
-        { props.children }
+        {props.children}
       </div>
     )
   }
@@ -84,13 +63,45 @@ export const NavGroupChildren: React.FC<INavGroupChildrenProp> = (props) => {
   return null;
 }
 
-const mountPoint = document.createElement('div')
-document.body.appendChild(mountPoint)
-/**
- * Render on body
- */
-const CompactNavGroupChildrenCont: React.FC = (props) => {
+interface ICompactNavGroupChildrenProps {
+  children: React.ReactNode
+  boundingRect: DOMRect
+}
 
-  return createPortal(props.children, mountPoint)
+const CompactNavGroupChildrenCont: React.FC<ICompactNavGroupChildrenProps> = ({ children, boundingRect }) => {
+  const [portalElement, setPortalElement] = React.useState<HTMLDivElement | null>(null);
+
+  React.useEffect(
+    () => {
+      const portal = document.createElement('div');
+      document.body.appendChild(portal);
+      setPortalElement(portal);
+
+      return () => {
+        document.body.removeChild(portal);
+      }
+    }, []
+  );
+
+  React.useEffect(() => {
+    if (portalElement) {
+      const { x: hoverBoxX, y: hoverBoxY, width: hoverBoxWidth } = boundingRect;
+      const { height: portalHeight } = portalElement.getBoundingClientRect();
+
+      const { innerHeight } = window;
+
+      const newX = hoverBoxX + hoverBoxWidth;
+      let newY = hoverBoxY;
+
+      if (hoverBoxY + portalHeight > innerHeight) {
+        newY = innerHeight - portalHeight;
+      }
+      portalElement.style.left = `${newX}px`;
+      portalElement.style.top = `${newY}px`;
+      portalElement.style.position = 'fixed';
+    }
+  }, [portalElement, boundingRect]);
+
+  return portalElement ? createPortal(children, portalElement) : null
 
 }

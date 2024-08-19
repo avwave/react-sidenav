@@ -82,7 +82,6 @@ const Icon: React.FC<{ icon: React.FC<IIconProp> }> = (props) => {
     </IconContainer>
   )
 }
-
 const structure = [
   {
     id: 'page1',
@@ -98,10 +97,28 @@ const structure = [
       }
     ]
   },
-  ...Array.from({ length: 28 }).map((_, i) => ({
+  ...Array.from({ length: 35 }, (_, i) => String(i + 1).padStart(3, '0')).map((i) => ({
     id: 'page+' + i,
     name: 'Page+ ' + i,
-    
+    children: [
+      {
+        id: `page-${i}-1`,
+        name: `---Page s-${i}-1`
+      },
+      {
+        id: `page-${i}-2`,
+        name: `---Page s-${i}-2`
+      },
+      {
+        id: `page-${i}-3`,
+        name: `---Page s-${i}-3`
+      },
+      {
+        id: `page-${i}-4`,
+        name: `---Page s-${i}-4`
+      },
+
+    ]
   })),
   {
     id: 'apeE',
@@ -109,19 +126,19 @@ const structure = [
     children: [
       {
         id: 'pageE-1',
-        name: 'Page E-1'
+        name: '---Page E-1'
       },
       {
         id: 'pageE-2',
-        name: 'Page E-2'
+        name: '---Page E-2'
       },
       {
         id: 'pageE-3',
-        name: 'Page E-3'
+        name: '---Page E-3'
       },
       {
         id: 'pageE-4',
-        name: 'Page E-4'
+        name: '---Page E-4'
       },
       
     ]
@@ -130,7 +147,7 @@ const structure = [
 
 
 const App: React.FC = () => {
-  const [collapsed, setCollapsed] = React.useState(false);
+  const [collapsed, setCollapsed] = React.useState(true);
 
   const navRef = React.useRef<ISideNavRef>(null)
 
