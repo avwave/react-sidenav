@@ -71,6 +71,7 @@ var CompactNavGroupChildrenCont = function (_a) {
             portalElement.style.left = newX + "px";
             portalElement.style.top = newY + "px";
             portalElement.style.position = 'fixed';
+            portalElement.style.zIndex = '9999';
         }
     }, [portalElement, boundingRect]);
     return portalElement ? react_dom_1.createPortal(children, portalElement) : null;
