@@ -99,6 +99,7 @@ const CompactNavGroupChildrenCont: React.FC<ICompactNavGroupChildrenProps> = ({ 
       portalElement.style.left = `${newX}px`;
       portalElement.style.top = `${newY}px`;
       portalElement.style.position = 'fixed';
+      portalElement.style.zIndex = '9999';
     }
   }, [portalElement, boundingRect]);
 
